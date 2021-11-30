@@ -9,25 +9,9 @@ CREATE TABLE public.blinds (
     id integer NOT NULL,
     name text NOT NULL
 );
-CREATE SEQUENCE public.blinds_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER SEQUENCE public.blinds_id_seq OWNED BY public.blinds.id;
 CREATE TABLE public.game_types (
     id integer NOT NULL,
     name text NOT NULL
-);
-ALTER TABLE public.game_types ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.game_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
 );
 CREATE TABLE public.games (
     id integer NOT NULL,
@@ -56,14 +40,6 @@ CREATE TABLE public.limits (
     id integer NOT NULL,
     name text NOT NULL
 );
-CREATE SEQUENCE public.limits_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER SEQUENCE public.limits_id_seq OWNED BY public.limits.id;
 CREATE TABLE public.transactions (
     id integer NOT NULL,
     created_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
@@ -112,8 +88,6 @@ CREATE SEQUENCE public.venues_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.venues_id_seq OWNED BY public.venues.id;
-ALTER TABLE ONLY public.blinds ALTER COLUMN id SET DEFAULT nextval('public.blinds_id_seq'::regclass);
-ALTER TABLE ONLY public.limits ALTER COLUMN id SET DEFAULT nextval('public.limits_id_seq'::regclass);
 ALTER TABLE ONLY public.venues ALTER COLUMN id SET DEFAULT nextval('public.venues_id_seq'::regclass);
 ALTER TABLE ONLY public.blinds
     ADD CONSTRAINT blinds_pkey PRIMARY KEY (id);
