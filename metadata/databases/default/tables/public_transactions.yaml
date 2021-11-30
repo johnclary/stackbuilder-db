@@ -1,0 +1,60 @@
+table:
+  name: transactions
+  schema: public
+object_relationships:
+- name: game
+  using:
+    foreign_key_constraint_on: game_id
+- name: user
+  using:
+    foreign_key_constraint_on: user_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - amount
+    - comment
+    - game_id
+    - inbound
+    - is_deleted
+    - txn_date
+    - user_id
+    set:
+      user_id: x-hasura-user-id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - amount
+    - comment
+    - created_date
+    - game_id
+    - id
+    - inbound
+    - is_deleted
+    - modified_date
+    - txn_date
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - amount
+    - comment
+    - game_id
+    - inbound
+    - is_deleted
+    - txn_date
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user

@@ -1,0 +1,19 @@
+table:
+  name: game_types
+  schema: public
+array_relationships:
+- name: games
+  using:
+    foreign_key_constraint_on:
+      column: game_type_id
+      table:
+        name: games
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    filter: {}
+  role: user

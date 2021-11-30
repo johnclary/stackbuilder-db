@@ -1,0 +1,17 @@
+depth_limit:
+  per_role:
+    user: 7
+  global: 10
+disabled: false
+rate_limit:
+  per_role:
+    user:
+      unique_params: null
+      max_reqs_per_min: 60
+  global:
+    unique_params: null
+    max_reqs_per_min: 1000
+node_limit:
+  per_role:
+    user: 12
+  global: 20
