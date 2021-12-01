@@ -1,3 +1,6 @@
+
+
+
 SET check_function_bodies = false;
 CREATE FUNCTION public.set_last_modified() RETURNS trigger
     LANGUAGE plpgsql
@@ -128,3 +131,23 @@ ALTER TABLE ONLY public.games
     ADD CONSTRAINT games_venue_id_fkey FOREIGN KEY (venue_id) REFERENCES public.venues(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.venues
     ADD CONSTRAINT venues_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+INSERT INTO "public"."game_types"("id", "name") VALUES
+    (1, E'Texas Holdem'),
+    (2, E'Omaha'),
+    (3, E'Dealer\'s Choice');
+
+INSERT INTO blinds (id, name) VALUES
+  (1, '.25/50'),
+  (2, '50/1'),
+  (3, '1/2'),
+  (4, '3/5'),
+  (5, '5/10');
+
+INSERT INTO limits (id, name) VALUES
+  (1, 'No limit'),
+  (2, 'Pot limit'),
+  (3, 'Fixed limit');
+
+INSERT INTO users (user_id, name) VALUES
+  ('auth0|61a5c43193d5400069c8d6f8', 'john');
