@@ -24,6 +24,7 @@ insert_permissions:
         _eq: X-Hasura-User-Id
     columns:
     - game_id
+    - is_active
     - is_deleted
     set:
       user_id: x-hasura-user-id
@@ -34,6 +35,7 @@ select_permissions:
     columns:
     - game_id
     - id
+    - is_active
     - is_deleted
     - user_id
     filter:
@@ -47,6 +49,7 @@ update_permissions:
         _eq: X-Hasura-User-Id
     columns:
     - game_id
+    - is_active
     - is_deleted
     filter:
       user_id:
