@@ -1,0 +1,39 @@
+table:
+  name: sessions
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - game_id
+    - is_deleted
+    set:
+      user_id: x-hasura-user-id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - game_id
+    - id
+    - is_deleted
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - game_id
+    - is_deleted
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user
