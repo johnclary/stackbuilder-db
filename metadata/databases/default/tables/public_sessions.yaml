@@ -1,6 +1,21 @@
 table:
   name: sessions
   schema: public
+object_relationships:
+- name: game
+  using:
+    foreign_key_constraint_on: game_id
+- name: user
+  using:
+    foreign_key_constraint_on: user_id
+array_relationships:
+- name: transactions
+  using:
+    foreign_key_constraint_on:
+      column: session_id
+      table:
+        name: transactions
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
