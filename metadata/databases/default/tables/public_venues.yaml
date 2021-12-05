@@ -28,6 +28,7 @@ select_permissions:
 - permission:
     columns:
     - id
+    - is_deleted
     - name
     - updated_at
     - user_id
@@ -41,6 +42,7 @@ update_permissions:
       user_id:
         _eq: X-Hasura-User-Id
     columns:
+    - is_deleted
     - name
     - updated_at
     filter:
