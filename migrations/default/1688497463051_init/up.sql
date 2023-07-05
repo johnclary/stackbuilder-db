@@ -1,6 +1,3 @@
-
-
-
 SET check_function_bodies = false;
 CREATE FUNCTION public.set_last_modified() RETURNS trigger
     LANGUAGE plpgsql
@@ -43,6 +40,21 @@ CREATE TABLE public.limits (
     id integer NOT NULL,
     name text NOT NULL
 );
+CREATE TABLE public.sessions (
+    id integer NOT NULL,
+    game_id integer NOT NULL,
+    user_id text NOT NULL,
+    is_deleted boolean DEFAULT false NOT NULL,
+    is_active boolean DEFAULT true NOT NULL
+);
+CREATE SEQUENCE public.sessions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 CREATE TABLE public.transactions (
     id integer NOT NULL,
     created_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
@@ -53,7 +65,8 @@ CREATE TABLE public.transactions (
     amount integer NOT NULL,
     is_deleted boolean DEFAULT false,
     game_id integer NOT NULL,
-    user_id text NOT NULL
+    user_id text NOT NULL,
+    session_id integer NOT NULL
 );
 ALTER TABLE public.transactions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.transactions_id_seq
@@ -81,7 +94,8 @@ CREATE TABLE public.venues (
     id integer NOT NULL,
     name text NOT NULL,
     user_id text NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    is_deleted boolean DEFAULT false NOT NULL
 );
 CREATE SEQUENCE public.venues_id_seq
     AS integer
@@ -91,6 +105,7 @@ CREATE SEQUENCE public.venues_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.venues_id_seq OWNED BY public.venues.id;
+ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
 ALTER TABLE ONLY public.venues ALTER COLUMN id SET DEFAULT nextval('public.venues_id_seq'::regclass);
 ALTER TABLE ONLY public.blinds
     ADD CONSTRAINT blinds_pkey PRIMARY KEY (id);
@@ -102,6 +117,8 @@ ALTER TABLE ONLY public.games
     ADD CONSTRAINT games_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.limits
     ADD CONSTRAINT limits_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.transactions
     ADD CONSTRAINT transactions_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.users
@@ -129,25 +146,11 @@ ALTER TABLE ONLY public.games
     ADD CONSTRAINT games_limit_id_fkey FOREIGN KEY (limit_id) REFERENCES public.limits(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.games
     ADD CONSTRAINT games_venue_id_fkey FOREIGN KEY (venue_id) REFERENCES public.venues(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_game_id_fkey FOREIGN KEY (game_id) REFERENCES public.games(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.transactions
+    ADD CONSTRAINT transactions_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.sessions(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.venues
     ADD CONSTRAINT venues_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-INSERT INTO "public"."game_types"("id", "name") VALUES
-    (1, E'Texas Holdem'),
-    (2, E'Omaha'),
-    (3, E'Dealer\'s Choice');
-
-INSERT INTO blinds (id, name) VALUES
-  (1, '.25/50'),
-  (2, '50/1'),
-  (3, '1/2'),
-  (4, '3/5'),
-  (5, '5/10');
-
-INSERT INTO limits (id, name) VALUES
-  (1, 'No limit'),
-  (2, 'Pot limit'),
-  (3, 'Fixed limit');
-
-INSERT INTO users (user_id, name) VALUES
-  ('auth0|61a5c43193d5400069c8d6f8', 'john');
