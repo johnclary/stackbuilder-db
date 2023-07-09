@@ -1,0 +1,1 @@
+ALTER TABLE hands DROP COLUMN game_id CASCADE;
