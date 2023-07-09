@@ -12,6 +12,7 @@ insert_permissions:
       columns:
         - hand
         - session_id
+        - is_draft
 select_permissions:
   - role: user
     permission:
@@ -21,6 +22,8 @@ select_permissions:
         - session_id
         - user_id
         - created_date
+        - is_draft
+        - modified_date
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -29,6 +32,7 @@ update_permissions:
     permission:
       columns:
         - hand
+        - is_draft
       filter:
         user_id:
           _eq: X-Hasura-User-Id
