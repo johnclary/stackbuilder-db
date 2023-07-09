@@ -1,16 +1,21 @@
 table:
-  name: transactions
+  name: sessions
   schema: public
 object_relationships:
   - name: game
     using:
       foreign_key_constraint_on: game_id
-  - name: session
-    using:
-      foreign_key_constraint_on: session_id
   - name: user
     using:
       foreign_key_constraint_on: user_id
+array_relationships:
+  - name: transactions
+    using:
+      foreign_key_constraint_on:
+        column: session_id
+        table:
+          name: transactions
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -20,28 +25,17 @@ insert_permissions:
       set:
         user_id: x-hasura-user-id
       columns:
-        - amount
-        - comment
         - game_id
-        - inbound
+        - is_active
         - is_deleted
-        - session_id
-        - txn_date
-        - user_id
 select_permissions:
   - role: user
     permission:
       columns:
-        - amount
-        - comment
-        - created_date
         - game_id
         - id
-        - inbound
+        - is_active
         - is_deleted
-        - modified_date
-        - session_id
-        - txn_date
         - user_id
       filter:
         user_id:
@@ -51,15 +45,12 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - amount
-        - comment
         - game_id
-        - inbound
+        - is_active
         - is_deleted
-        - session_id
-        - txn_date
-        - user_id
       filter:
         user_id:
           _eq: X-Hasura-User-Id
-      check: null
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
