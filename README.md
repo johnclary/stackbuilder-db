@@ -1,19 +1,17 @@
 # stackbuilder-db
 
-Checkout a new branch.
-
-Start the hasura cluster.
+## Local dev
 
 ```shell
 $ docker-compose up -d
+$ hasura console
 ```
 
-Launch the console (in migrations mode)
+# apply to prod
+
+This has to be done manually :)
 
 ```shell
-hasura console --envfile dev.env
+$ hasura migrate apply --envfile production.env        
+$ hasura metadata apply --envfile production.env
 ```
-
-Make some changes.
-
-Commit them.
