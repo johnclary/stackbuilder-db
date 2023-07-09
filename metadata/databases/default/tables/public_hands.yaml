@@ -1,0 +1,35 @@
+table:
+  name: hands
+  schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-user-id
+      columns:
+        - hand
+        - session_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - hand
+        - session_id
+        - user_id
+        - created_date
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - hand
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: {}

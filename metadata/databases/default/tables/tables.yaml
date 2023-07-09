@@ -1,6 +1,7 @@
 - "!include public_blinds.yaml"
 - "!include public_game_types.yaml"
 - "!include public_games.yaml"
+- "!include public_hands.yaml"
 - "!include public_limits.yaml"
 - "!include public_sessions.yaml"
 - "!include public_transactions.yaml"
