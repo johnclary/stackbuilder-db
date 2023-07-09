@@ -12,6 +12,7 @@ $ hasura console
 2. Apply metadata to connect to db
 
 ```shell
+# establishes db conn
 $ hasura metadata apply
 ```
 
@@ -20,6 +21,8 @@ $ hasura metadata apply
 ```shell
 $ hasura migrate apply
 $ hasura seed apply
+# reapply metadata to clear inconsistent
+$ hasura metadata apply
 ```
 
 # apply to prod
